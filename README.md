@@ -9,7 +9,7 @@ TO BUILD:
 - make sure to have maven downloaded and unzipped
 - set the maven path in the $PATH% environment variable
 - make sure to have java jdk-18.0.1.1 downloaded
-- set the $JAVA_HOME$ environment variable to the path of the jdk
+- set the JAVA_HOME environment variable to the path of the jdk
 - running 'mvn -v' should return the current version of maven running locally
 - open port 8080 on the local machine
 - cd into Apple-Exercise/exercise (where the pom file is located)
