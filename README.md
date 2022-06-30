@@ -13,7 +13,7 @@ TO BUILD:
 - running 'mvn -v' should return the current version of maven running locally
 - open port 8080 on the local machine
 - cd into Apple-Exercise/exercise (where the pom file is located)
-- run 'mvn clean install'. If this does not build successfully, from my experience either the wrong version of jdk or maven is not in the path
+- run 'mvn clean install'. If this does not build successfully, from my experience either the wrong version of jdk or maven cannot be found in the environment
 - if the jar is built successfully, it should be in the target folder of the project
 - finally, to run the application locally use 'mvn spring-boot:run' in the /Apple-Exercise/exercise directory
 - the server will run (if port 8080) is available, and the endpoints can be reached at 'http://localhost:8080/'
