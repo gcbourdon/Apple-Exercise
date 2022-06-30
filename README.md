@@ -1,17 +1,22 @@
 # Apple-Exercise
 Apple programming interview exercise
 
-SDK: 1.8
 Java 18
 
-Uses Tomcat server on Spring framework
+Used Spring framework with Tomcat server
 
 TO BUILD:
-- set the $JAVA_HOME$ environment variable to jdk-18.0.1.1
-- 
-- I used Java jdk-18.0.1.1 as the SDK
+- make sure to have maven downloaded and unzipped
+- set the maven path in the $PATH% environment variable
+- make sure to have java jdk-18.0.1.1 downloaded
+- set the $JAVA_HOME$ environment variable to the path of the jdk
+- running 'mvn -v' should return the current version of maven running locally
+- open port 8080 on the local machine
 - cd into Apple-Exercise/exercise (where the pom file is located)
-- run 'mvn clean install'
+- run 'mvn clean install'. If this does not build successfully, from my experience either the wrong version of jdk or maven is not in the path
+- if the jar is built successfully, it should be in the target folder of the project
+- finally, to run the application locally use 'mvn spring-boot:run' in the /Apple-Exercise/exercise directory
+- the server will run (if port 8080) is available, and the endpoints can be reached at 'http://localhost:8080/'
 
 
 DESIGN DECISIONS: 
@@ -21,3 +26,6 @@ DESIGN DECISIONS:
 - Used longs for the count and value variables to ensure enough space to store in a single variable 
 
 - For the post mapping, since the methods are not idempotent (do not return same value for same input) it was not appropriate to use path variables. Therefore, I decided to use a Map input 
+
+
+
