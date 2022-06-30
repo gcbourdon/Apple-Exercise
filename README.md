@@ -7,7 +7,7 @@ Used Spring framework with Tomcat server
 
 TO BUILD:
 - make sure to have maven downloaded and unzipped
-- set the maven path in the PATH environment variable
+- set the maven folder path in the PATH environment variable
 - make sure to have java jdk-18.0.1.1 downloaded
 - set the JAVA_HOME environment variable to the path of the jdk
 - running 'mvn -v' should return the current version of maven running locally
