@@ -18,8 +18,11 @@ TO BUILD:
 - finally, to run the application locally use 'mvn spring-boot:run' in the /Apple-Exercise/exercise directory
 - the server will run (if port 8080) is available, and the endpoints can be reached at 'http://localhost:8080/'
 
-
+ASSUMPTIONS:
+  
 DESIGN DECISIONS: 
+
+- In the instruction spec, it says to provision 1 key for the system. However, it does does not specify the type of algorithm parameters to use and/or if I should use   the same  initialization vector to ensure idempotency between the encrypt/decrypt interface. I decided to generate a different IV for my algorithm parameters to    inititialze the AES cipher with the secret key and different IV for each unique execution of the app.
 
 - Used floating point values to have more than 2 decimal points precision in output
 
