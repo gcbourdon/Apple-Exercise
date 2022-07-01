@@ -11,9 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.crypto.SecretKey;
-import java.security.SecureRandom;
 import java.util.Map;
 import javax.xml.bind.DatatypeConverter;
 
@@ -26,8 +23,6 @@ public class CryptoController {
     private float sumOfSquares;
     private float sumOfValues;
     private long count;
-    private final SecretKey key;
-    private final byte[] initializationBuffer;
 
     public CryptoController(
             @Autowired CryptoService cryptoService,
@@ -37,25 +32,10 @@ public class CryptoController {
         this.sumOfSquares = 0;
         this.sumOfValues = 0;
         this.count = 0;
-        this.key = cryptoService.createAESKey();
-        this.initializationBuffer = createInitializationBuffer();
         this.plainTextStatistics = PlainTextStatistics.builder()
                 .avg(0)
                 .stdDev(0)
                 .build();
-    }
-
-    /**
-     * method used to create an initial buffer which is used in the AES encryption algorithm
-     * @return the randomly initialized buffer
-     */
-    private static byte[] createInitializationBuffer()
-    {
-        //Used with the encryption algorithm
-        byte[] buffer = new byte[16];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(buffer);
-        return buffer;
     }
 
     /**
@@ -100,8 +80,8 @@ public class CryptoController {
 
         return new ResponseEntity<EncryptedStatistics>(
                 EncryptedStatistics.builder()
-                        .encryptedAvg(cryptoService.encrypt(Float.toString(plainTextStatistics.getAvg()), key, initializationBuffer))
-                        .encryptedStdDev(cryptoService.encrypt(Float.toString(plainTextStatistics.getStdDev()), key, initializationBuffer))
+                        .encryptedAvg(cryptoService.encrypt(Float.toString(plainTextStatistics.getAvg())))
+                        .encryptedStdDev(cryptoService.encrypt(Float.toString(plainTextStatistics.getStdDev())))
                         .build(), HttpStatus.OK);
 
     }
@@ -115,6 +95,6 @@ public class CryptoController {
     @GetMapping(path = "/Decrypt", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String decrypt(@RequestBody Map<String, String> body) throws Exception {
-        return cryptoService.decrypt(DatatypeConverter.parseBase64Binary(body.get("cipher")), key, initializationBuffer);
+        return cryptoService.decrypt(DatatypeConverter.parseBase64Binary(body.get("cipher")));
     }
 }
