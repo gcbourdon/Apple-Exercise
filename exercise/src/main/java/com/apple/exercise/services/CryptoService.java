@@ -1,5 +1,7 @@
 package com.apple.exercise.services;
 
+import com.apple.exercise.CryptoConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -14,14 +16,36 @@ import java.security.SecureRandom;
 public class CryptoService {
     //variables used for AES symmetric encryption cipher
     private static final String AES = "AES";
+    private static final String FORMAT = "RAW";
     private static final String AES_CIPHER_ALGORITHM = "AES/CBC/PKCS5PADDING"; //using block cipher CBC mode
+
+    @Value("${symmetric.key}")
+    private String symmetricKey;
 
     //method used to create a secret key
     public SecretKey createAESKey() throws Exception {
         SecureRandom securerandom = new SecureRandom();
         KeyGenerator keygenerator = KeyGenerator.getInstance(AES);
         keygenerator.init(256, securerandom);
-        SecretKey key = keygenerator.generateKey();
+        SecretKey key = new SecretKey() {
+            @Override
+            public String getAlgorithm() {
+                return AES;
+            }
+
+            @Override
+            public String getFormat() {
+                return FORMAT;
+            }
+
+            @Override
+            public byte[] getEncoded() {
+                return DatatypeConverter.parseBase64Binary(symmetricKey);
+            }
+        };
+        System.out.println(key.getAlgorithm());
+        System.out.println(DatatypeConverter.printBase64Binary(key.getEncoded()));
+        System.out.println(key.getFormat());
         return key;
     }
 
