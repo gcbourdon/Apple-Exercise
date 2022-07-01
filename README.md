@@ -28,7 +28,7 @@ DESIGN DECISIONS:
 
 - Used longs for the count and value variables to ensure enough space to store in a single variable 
 
-- For the post mapping, since the methods are not idempotent (do not return same value for same input) it was not appropriate to use path variables. Therefore, I decided to use a Map<String, Integer> input 
+- For the post mapping, since the methods are not idempotent (do not return same value for same input) it was not appropriate to use path variables. Therefore, I decided to use a Map<String, Integer> body in the request
 
 
 
