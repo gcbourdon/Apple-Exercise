@@ -32,7 +32,7 @@ public class CryptoController {
         this.sumOfSquares = 0;
         this.sumOfValues = 0;
         this.count = 0;
-        this.plainTextStatistics = PlainTextStatistics.builder()
+        this.plainTextStatistics = PlainTextStatistics.builder() //creating a new object to store the running avg and stddev throughout duration of the app
                 .avg(0)
                 .stdDev(0)
                 .build();
