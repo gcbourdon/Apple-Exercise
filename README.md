@@ -49,7 +49,7 @@ DESIGN DECISIONS:
 
 - I used double values for the running summations, averages, and standard deviations. I also formatted each output to 3 decimal places if they need to be rounded. 
 
-- In order to model the data appropriately based on the example input/output, I decided to create a class which contains the plain text pair of statistics (avg, stddev) and called that PlainTextStatistics. I also created another class EncryptedStatistics to model the pair of encrypted avg and stddev. Either value in the encrypted statistics pair can then be passed into the Decrypt API to get the actual single value.
+- In order to model the data appropriately based on the example input/output, I decided to create a class which contains the actual values of statistics (avg, stddev) and called that PlainTextStatistics. I also created another class EncryptedStatistics to model the pair of encrypted avg and stddev. Either value in the encrypted statistics pair can then be passed into the Decrypt API to get the actual single value.
 
 - I used long for the count variable because the spec says to account for an arbitrary large input set. 
 
