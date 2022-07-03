@@ -1,7 +1,7 @@
 # Apple-Exercise
 Apple programming interview exercise
 
-Java 18.0.1.1 Spring framework with Tomcat server
+Java 18.0.1.1 & Spring framework with Tomcat server
 
 TO BUILD:
 
