@@ -37,7 +37,7 @@ ASSUMPTIONS:
 
 - The spec doesn't specify whether the input is an integer so I assumed decimals can also be entered.
 
-- I assumed it was my decision to generate a new random initialization vector at run time to avoid having the same encryption with the same secret for each execution.
+- I assumed it was my decision to generate a new random initialization vector at run time to avoid having the same encryption due to the use of the same secret key for each execution.
 
   
 DESIGN DECISIONS: 
