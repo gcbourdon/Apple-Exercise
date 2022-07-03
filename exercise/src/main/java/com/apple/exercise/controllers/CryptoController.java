@@ -11,9 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.crypto.SecretKey;
-import java.security.SecureRandom;
 import java.util.Map;
 import javax.xml.bind.DatatypeConverter;
 
@@ -23,11 +20,9 @@ public class CryptoController {
     private CryptoService cryptoService;
     private MathService mathService;
     private PlainTextStatistics plainTextStatistics;
-    private float sumOfSquares;
-    private float sumOfValues;
+    private double sumOfSquares;
+    private double sumOfValues;
     private long count;
-    private final SecretKey key;
-    private final byte[] initializationBuffer;
 
     public CryptoController(
             @Autowired CryptoService cryptoService,
@@ -37,34 +32,18 @@ public class CryptoController {
         this.sumOfSquares = 0;
         this.sumOfValues = 0;
         this.count = 0;
-        this.key = cryptoService.createAESKey();
-        this.initializationBuffer = createInitializationBuffer();
-        this.plainTextStatistics = PlainTextStatistics.builder()
+        this.plainTextStatistics = PlainTextStatistics.builder() //creating a new object to store the running avg and stddev throughout duration of the app
                 .avg(0)
                 .stdDev(0)
                 .build();
     }
 
     /**
-     * method used to create an initial buffer which is used in the AES encryption algorithm
-     * @return the randomly initialized buffer
-     */
-    private static byte[] createInitializationBuffer()
-    {
-        //Used with the encryption algorithm
-        byte[] buffer = new byte[16];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(buffer);
-        return buffer;
-    }
-
-    /**
-     * method used to update the servers running values.
-     * without needing to store each input number, it takes much less memory to calculate the aggregate functions
+     * method used to update the servers running values without needing to store each input in a data structure
      *
      * @param newVal next input number
      */
-    private void updateValues(int newVal) {
+    private void updateValues(double newVal) {
         sumOfValues += newVal;
         sumOfSquares += Math.pow(newVal, 2);
         count++;
@@ -80,41 +59,52 @@ public class CryptoController {
      */
     @PostMapping(path = "/PushAndRecalculate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Integer> body) {
-        updateValues(body.get("value")); //updating server values
+    public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Double> body) {
+        updateValues(body.get("value")); //updating server values with new input
         return new ResponseEntity<PlainTextStatistics>(plainTextStatistics, HttpStatus.OK); //return the JSON object
     }
 
     /**
      * API for adding a new value to update the aggregates and encrypting the new aggregates.
      * The encrypted statistics can be used to find the numeric value of the running average and standard deviation
-     * using the Decrypt endpoint below.
+     * using the Decrypt method below.
      *
      * @param body a map which contains the String "value" and the input number
      * @return a JSON object of type EncryptedStatistics which contains the encryptedAvg and encryptedStdDev
      */
     @PostMapping(path = "/PushRecalculateAndEncrypt", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<EncryptedStatistics> pushRecalculateAndEncrypt(@RequestBody Map<String, Integer> body) throws Exception {
+    public ResponseEntity<EncryptedStatistics> pushRecalculateAndEncrypt(@RequestBody Map<String, Double> body) throws Exception {
         updateValues(body.get("value")); //updating server values with the new input
 
         return new ResponseEntity<EncryptedStatistics>(
                 EncryptedStatistics.builder()
-                        .encryptedAvg(cryptoService.encrypt(Float.toString(plainTextStatistics.getAvg()), key, initializationBuffer))
-                        .encryptedStdDev(cryptoService.encrypt(Float.toString(plainTextStatistics.getStdDev()), key, initializationBuffer))
+                        .encryptedAvg(cryptoService.encrypt(Double.toString(plainTextStatistics.getAvg())))
+                        .encryptedStdDev(cryptoService.encrypt(Double.toString(plainTextStatistics.getStdDev())))
                         .build(), HttpStatus.OK);
 
     }
 
     /**
-     * API for getting the running numeric aggregate values.
+     * API for consuming the running numeric aggregate values by decrypting the previously encrypted values.
      *
      * @param body a map which contains the String "cipher" and encrypted(avg) or encrypted(stdDev)
-     * @return a String of the actual average or actual standard deviation
+     * @return a response entity with the String of the actual average or actual standard deviation in the body
      */
     @GetMapping(path = "/Decrypt", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String decrypt(@RequestBody Map<String, String> body) throws Exception {
-        return cryptoService.decrypt(DatatypeConverter.parseBase64Binary(body.get("cipher")), key, initializationBuffer);
+    public ResponseEntity<String> decrypt(@RequestBody Map<String, String> body) throws Exception {
+        String response = cryptoService.decrypt(DatatypeConverter.parseBase64Binary(body.get("cipher")));
+        if(response == null) {
+            return new ResponseEntity<String>(
+                    "cipher text cannot be decrypted because of the following:\n " +
+                            "- BadPaddingException\n " +
+                            "- InvalidKeyException\n " +
+                            "- InvalidAlgorithmParameterException\n " +
+                            "- IllegalBlockSizeException\n",
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 }

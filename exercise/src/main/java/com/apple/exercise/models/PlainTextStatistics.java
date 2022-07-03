@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class PlainTextStatistics {
-    private float avg;
-    private float stdDev;
+    private double avg;
+    private double stdDev;
 }
