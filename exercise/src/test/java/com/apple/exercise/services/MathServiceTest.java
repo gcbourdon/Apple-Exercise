@@ -26,7 +26,6 @@ public class MathServiceTest {
 
         for(int i = 0; i < size; i++) {
             double num = random.nextInt();
-            System.out.println(num);
             sum += num;
         }
 
