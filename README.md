@@ -69,7 +69,7 @@ https://en.wikipedia.org/wiki/Initialization_vector
 https://medium.com/swlh/an-introduction-to-the-advanced-encryption-standard-aes-d7b72cc8de97
 
 
-- I used the following source to get familiar with the math behind calculating running average and standard deviations:
+- I used the following source to get familiar with the math behind calculating running standard deviations:
 
 https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
 
