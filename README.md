@@ -35,7 +35,10 @@ API CONSUMPTION:
 
 ASSUMPTIONS:
 
-- 
+- The spec doesn't specify whether the input is an integer so I assumed decimals can also be entered.
+
+- I assumed it was my decision to generate a new random initialization vector at run time to avoid having the same encryption with the same secret for each execution.
+
   
 DESIGN DECISIONS: 
 
@@ -43,9 +46,9 @@ DESIGN DECISIONS:
 
 - I decided to use 256 bit AES encryption to generate a secret key which is stored in the application.properties file. I also used base64 encoding scheme to transmit the information that is encrypted using this key. 
 
-- In the spec, the input value for the APIs says a single number and does not specify an integer. For this reason, I decided to use floats for the input in the API request body.
+- In the spec, the input value for the APIs says a single number and does not specify an integer. For this reason, I decided to use doubles for the input in the API request body.
 
-- I used floating point values for the running summations, averages, and standard deviations to have more than 2 decimal points precision in the output. I also formatted each output to 3 decimal places if they need to be rounded. 
+- I used double values for the running summations, averages, and standard deviations. I also formatted each output to 3 decimal places if they need to be rounded. 
 
 - In order to model the data appropriately based on the example input/output, I decided to create a class which contains the plain text pair of statistics (avg, stddev) and called that PlainTextStatistics. I also created another class EncryptedStatistics to model the pair of encrypted avg and stddev. Either value in the encrypted statistics pair can then be passed into the Decrypt API to get the actual single value.
 
@@ -53,7 +56,7 @@ DESIGN DECISIONS:
 
 - Due to the RAM constraints noted in the spec (C), I did not store the input values in a data structure. Instead, I kept a running summation of the values and another summation of the values squared. With these summations and the count of all input numbers so far, I was able to calculate the running avg and stddev. 
 
-- Due to the methods not being idempotent (do not return same value for same input) it was not appropriate to use path variables. Therefore, I decided to use a Map<String, Float> body in the POST requests, and Map<String, String> body in the GET request to decrypt.
+- Due to the methods not being idempotent (do not return same value for same input) it was not appropriate to use path variables. Therefore, I decided to use a Map<String, Double> body in the POST requests, and Map<String, String> body in the GET request to decrypt.
 
 
 REFERENCES:
