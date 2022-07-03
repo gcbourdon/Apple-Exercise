@@ -18,6 +18,21 @@ TO BUILD:
 - finally, to run the application locally use 'mvn spring-boot:run' in the /Apple-Exercise/exercise directory
 - the server will run (if port 8080) is available, and the endpoints can be reached at 'http://localhost:8080/'
 
+API CONSUMPTION:
+
+- endpoint -> http://localhost:8080/PushAndRecalculate 
+        An HTTP POST request which requires a JSON payload in the body of structure:
+        { "value": number }
+
+- endpoint -> http://localhost:8080/PushRecalculateAndEncrypt 
+        An HTTP POST request which requires a JSON payload in the body of structure:
+        { "value": number }
+
+- endpoint -> http://localhost:8080/Decrypt 
+        An HTTP GET request which requires a JSON payload in the body of structure: 
+        { "cipher": "encrypted text" }
+
+
 ASSUMPTIONS:
   
 DESIGN DECISIONS: 
