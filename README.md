@@ -21,15 +21,15 @@ TO BUILD:
 API CONSUMPTION:
 
 - endpoint -> http://localhost:8080/PushAndRecalculate 
-        An HTTP POST request which requires a JSON payload in the body of structure:
+        An HTTP POST request which requires a JSON payload in the body with structure:
         { "value": number }
 
 - endpoint -> http://localhost:8080/PushRecalculateAndEncrypt 
-        An HTTP POST request which requires a JSON payload in the body of structure:
+        An HTTP POST request which requires a JSON payload in the body with structure:
         { "value": number }
 
 - endpoint -> http://localhost:8080/Decrypt 
-        An HTTP GET request which requires a JSON payload in the body of structure: 
+        An HTTP GET request which requires a JSON payload in the body with structure: 
         { "cipher": "encrypted text" }
 
 
