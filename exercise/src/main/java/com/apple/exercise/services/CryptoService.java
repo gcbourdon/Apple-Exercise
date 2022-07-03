@@ -3,11 +3,10 @@ package com.apple.exercise.services;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.xml.bind.DatatypeConverter;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -83,7 +82,7 @@ public class CryptoService {
      * @param cipherText the cipher text byte array in base64 encoding scheme
      * @return the decrypted plain text which is the actual numeric value of either total average or total standard deviation
      */
-    public String decrypt(byte[] cipherText) throws Exception {
+    public String decrypt(byte[] cipherText)  {
 
         //defining the initialization vector parameter spec using the same IV that was used to encrypt the plain text
         IvParameterSpec ivParameterSpec = new IvParameterSpec(IV);
@@ -94,12 +93,15 @@ public class CryptoService {
                     Cipher.DECRYPT_MODE,
                     secretKey,
                     ivParameterSpec);
-        } catch(InvalidKeyException e) {
-            System.out.println(e);
-            System.out.println("****INVALID KEY EXCEPTION****");
+        } catch(InvalidKeyException | InvalidAlgorithmParameterException e) {
+            return null;
         }
 
         //returning the plain text
-        return new String(cipher.doFinal(cipherText));
+        try {
+            return new String(cipher.doFinal(cipherText));
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
+            return null;
+        }
     }
 }

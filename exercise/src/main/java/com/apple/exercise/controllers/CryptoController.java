@@ -44,7 +44,7 @@ public class CryptoController {
      *
      * @param newVal next input number
      */
-    private void updateValues(int newVal) {
+    private void updateValues(float newVal) {
         sumOfValues += newVal;
         sumOfSquares += Math.pow(newVal, 2);
         count++;
@@ -60,7 +60,7 @@ public class CryptoController {
      */
     @PostMapping(path = "/PushAndRecalculate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Integer> body) {
+    public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Float> body) {
         updateValues(body.get("value")); //updating server values
         return new ResponseEntity<PlainTextStatistics>(plainTextStatistics, HttpStatus.OK); //return the JSON object
     }
@@ -75,7 +75,7 @@ public class CryptoController {
      */
     @PostMapping(path = "/PushRecalculateAndEncrypt", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<EncryptedStatistics> pushRecalculateAndEncrypt(@RequestBody Map<String, Integer> body) throws Exception {
+    public ResponseEntity<EncryptedStatistics> pushRecalculateAndEncrypt(@RequestBody Map<String, Float> body) throws Exception {
         updateValues(body.get("value")); //updating server values with the new input
 
         return new ResponseEntity<EncryptedStatistics>(
@@ -90,11 +90,22 @@ public class CryptoController {
      * API for getting the running numeric aggregate values.
      *
      * @param body a map which contains the String "cipher" and encrypted(avg) or encrypted(stdDev)
-     * @return a String of the actual average or actual standard deviation
+     * @return a response entity with the String of the actual average or actual standard deviation in the body
      */
     @GetMapping(path = "/Decrypt", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String decrypt(@RequestBody Map<String, String> body) throws Exception {
-        return cryptoService.decrypt(DatatypeConverter.parseBase64Binary(body.get("cipher")));
+    public ResponseEntity<String> decrypt(@RequestBody Map<String, String> body) throws Exception {
+        String response = cryptoService.decrypt(DatatypeConverter.parseBase64Binary(body.get("cipher")));
+        if(response == null) {
+            return new ResponseEntity<String>(
+                    "cipher text cannot be decrypted because of the following:\n " +
+                            "- BadPaddingException\n " +
+                            "- InvalidKeyException\n " +
+                            "- InvalidAlgorithmParameterException\n " +
+                            "- IllegalBlockSizeException\n",
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 }
