@@ -20,23 +20,23 @@ public class SystemIT {
 
     //this is a system integration test using both services together
     @Test
-    public void avgIT() throws Exception {
+    public void systemTest() throws Exception {
         Random random = new Random();
-        final long size = 10000;
+        final long size = 100;
         long count = 0;
-        float sumOfValues = 0;
-        float sumOfSquares = 0;
-        float avg = 0;
-        float stdDev = 0;
+        double sumOfValues = 0;
+        double sumOfSquares = 0;
+        double avg = 0;
+        double stdDev = 0;
         String plainTextAvg;
         String plainTextStdDev;
 
         //generating 10,000 random numbers for the running avg and stddev
         for(int i = 0; i < size; i++) {
             count++;
-            float input = random.nextFloat();
+            double input = random.nextInt();
             sumOfValues += input;
-            sumOfSquares += (float)Math.pow(input, 2);
+            sumOfSquares += Math.pow(input, 2);
 
             //calculating aggregates using math service
             avg = mathService.calculateAvg(sumOfValues, count);
@@ -44,17 +44,17 @@ public class SystemIT {
 
             //getting plain text values by encrypting the real value then using the decrypt method in crypto service
             plainTextAvg = cryptoService.decrypt(DatatypeConverter.parseBase64Binary(
-                    cryptoService.encrypt(Float.toString(avg))));
+                    cryptoService.encrypt(Double.toString(avg))));
 
             plainTextStdDev = cryptoService.decrypt(DatatypeConverter.parseBase64Binary(
-                    cryptoService.encrypt(Float.toString(stdDev))));
+                    cryptoService.encrypt(Double.toString(stdDev))));
 
             Assertions.assertEquals(
-                    Float.toString(avg),
+                    Double.toString(avg),
                     plainTextAvg);
 
             Assertions.assertEquals(
-                    Float.toString(stdDev),
+                    Double.toString(stdDev),
                     plainTextStdDev
             );
 

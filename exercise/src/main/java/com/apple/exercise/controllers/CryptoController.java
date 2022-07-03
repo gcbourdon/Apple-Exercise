@@ -20,8 +20,8 @@ public class CryptoController {
     private CryptoService cryptoService;
     private MathService mathService;
     private PlainTextStatistics plainTextStatistics;
-    private float sumOfSquares;
-    private float sumOfValues;
+    private double sumOfSquares;
+    private double sumOfValues;
     private long count;
 
     public CryptoController(
@@ -43,7 +43,7 @@ public class CryptoController {
      *
      * @param newVal next input number
      */
-    private void updateValues(float newVal) {
+    private void updateValues(double newVal) {
         sumOfValues += newVal;
         sumOfSquares += Math.pow(newVal, 2);
         count++;
@@ -59,7 +59,7 @@ public class CryptoController {
      */
     @PostMapping(path = "/PushAndRecalculate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Float> body) {
+    public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Double> body) {
         updateValues(body.get("value")); //updating server values with new input
         return new ResponseEntity<PlainTextStatistics>(plainTextStatistics, HttpStatus.OK); //return the JSON object
     }
@@ -74,13 +74,13 @@ public class CryptoController {
      */
     @PostMapping(path = "/PushRecalculateAndEncrypt", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<EncryptedStatistics> pushRecalculateAndEncrypt(@RequestBody Map<String, Float> body) throws Exception {
+    public ResponseEntity<EncryptedStatistics> pushRecalculateAndEncrypt(@RequestBody Map<String, Double> body) throws Exception {
         updateValues(body.get("value")); //updating server values with the new input
 
         return new ResponseEntity<EncryptedStatistics>(
                 EncryptedStatistics.builder()
-                        .encryptedAvg(cryptoService.encrypt(Float.toString(plainTextStatistics.getAvg())))
-                        .encryptedStdDev(cryptoService.encrypt(Float.toString(plainTextStatistics.getStdDev())))
+                        .encryptedAvg(cryptoService.encrypt(Double.toString(plainTextStatistics.getAvg())))
+                        .encryptedStdDev(cryptoService.encrypt(Double.toString(plainTextStatistics.getStdDev())))
                         .build(), HttpStatus.OK);
 
     }

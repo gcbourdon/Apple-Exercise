@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 public class AggregateTest {
     @Test
     public void givenAvgCalculationTest() {
-        final float avg = (float)5.4;
-        float sum = 0;
+        final double avg = 5.4;
+        double sum = 0;
         int[] input = {4, 7, 6, 9, 1};
 
         for(int num: input) {
@@ -18,8 +18,8 @@ public class AggregateTest {
 
     @Test
     public void negativeAvgCalculationTest() {
-        final float avg = (float) -3.0;
-        float sum = 0;
+        final double avg = -3.0;
+        double sum = 0;
         int[] input = {-1, -2, -3, -4, -5};
 
         for(int num: input) {
@@ -30,8 +30,8 @@ public class AggregateTest {
 
     @Test
     public void mixAvgCalculationTest() {
-        final float avg = (float) 1.2;
-        float sum = 0;
+        final double avg = 1.2;
+        double sum = 0;
         int[] input = {-1, 4, -2, 7, -3, 6, -4, 9, -5, 1};
 
         for(int num: input) {
@@ -43,9 +43,9 @@ public class AggregateTest {
     @Test
     public void givenStdDevCalculationTest() {
         final String format = "%.3f";
-        final float stdDev = (float)2.728;
-        float sumOfValues = 0;
-        float sumOfSquares = 0;
+        final double stdDev = 2.728;
+        double sumOfValues = 0;
+        double sumOfSquares = 0;
         int[] input = {4, 7, 6, 9, 1};
 
         for(int num: input) {
@@ -53,10 +53,10 @@ public class AggregateTest {
             sumOfSquares += Math.pow(num, 2);
         }
 
-        float result = Float.parseFloat(
+        double result = Double.parseDouble(
                 String.format(
                         format,
-                        (float)Math.sqrt((sumOfSquares/input.length) - Math.pow(sumOfValues/input.length, 2))));
+                        Math.sqrt((sumOfSquares/input.length) - Math.pow(sumOfValues/input.length, 2))));
 
         Assertions.assertEquals(stdDev, result);
     }
@@ -64,9 +64,9 @@ public class AggregateTest {
     @Test
     public void negativeStdDevCalculationTest() {
         final String format = "%.3f";
-        final float stdDev = (float)1.414;
-        float sumOfValues = 0;
-        float sumOfSquares = 0;
+        final double stdDev = 1.414;
+        double sumOfValues = 0;
+        double sumOfSquares = 0;
         int[] input = {-1, -2, -3, -4, -5};
 
         for(int num: input) {
@@ -74,10 +74,10 @@ public class AggregateTest {
             sumOfSquares += Math.pow(num, 2);
         }
 
-        float result = Float.parseFloat(
+        double result = Double.parseDouble(
                 String.format(
                         format,
-                        (float)Math.sqrt((sumOfSquares/input.length) - Math.pow(sumOfValues/input.length, 2))));
+                        Math.sqrt((sumOfSquares/input.length) - Math.pow(sumOfValues/input.length, 2))));
 
         Assertions.assertEquals(stdDev, result);
     }
@@ -85,9 +85,9 @@ public class AggregateTest {
     @Test
     public void mixStdDevCalculationTest() {
         final String format = "%.3f";
-        final float stdDev = (float)4.729;
-        float sumOfValues = 0;
-        float sumOfSquares = 0;
+        final double stdDev = 4.729;
+        double sumOfValues = 0;
+        double sumOfSquares = 0;
         int[] input = {-1, 4, -2, 7, -3, 6, -4, 9, -5, 1};
 
         for(int num: input) {
@@ -95,10 +95,10 @@ public class AggregateTest {
             sumOfSquares += Math.pow(num, 2);
         }
 
-        float result = Float.parseFloat(
+        double result = Double.parseDouble(
                 String.format(
                         format,
-                        (float)Math.sqrt((sumOfSquares/input.length) - Math.pow(sumOfValues/input.length, 2))));
+                        Math.sqrt((sumOfSquares/input.length) - Math.pow(sumOfValues/input.length, 2))));
 
         Assertions.assertEquals(stdDev, result);
     }

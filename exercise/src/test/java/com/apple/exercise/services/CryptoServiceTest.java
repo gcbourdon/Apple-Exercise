@@ -22,7 +22,7 @@ public class CryptoServiceTest {
         //generating 10,000 random integers to use for the plain text
         //and testing the CryptoService functions
         for(int i = 0; i < inputSize; i++) {
-            String plainText = Float.toString(random.nextFloat());
+            String plainText = Double.toString(random.nextInt());
 
             Assertions.assertEquals(
                     plainText,

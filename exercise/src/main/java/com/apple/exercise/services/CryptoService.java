@@ -52,7 +52,7 @@ public class CryptoService {
      *  time the program is restarted.
      */
     private byte[] createInitializationVector() {
-        //Used with the encryption algorithm to
+        //Used with the encryption algorithm to avoid the same encryption every time the app runs
         byte[] IV = new byte[16];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(IV);
