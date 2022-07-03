@@ -39,8 +39,7 @@ public class CryptoController {
     }
 
     /**
-     * method used to update the servers running values.
-     * without needing to store each input number, it takes much less memory to calculate the aggregate functions
+     * method used to update the servers running values without needing to store each input in a data structure
      *
      * @param newVal next input number
      */
@@ -61,14 +60,14 @@ public class CryptoController {
     @PostMapping(path = "/PushAndRecalculate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<PlainTextStatistics> pushAndRecalculate(@RequestBody Map<String, Float> body) {
-        updateValues(body.get("value")); //updating server values
+        updateValues(body.get("value")); //updating server values with new input
         return new ResponseEntity<PlainTextStatistics>(plainTextStatistics, HttpStatus.OK); //return the JSON object
     }
 
     /**
      * API for adding a new value to update the aggregates and encrypting the new aggregates.
      * The encrypted statistics can be used to find the numeric value of the running average and standard deviation
-     * using the Decrypt endpoint below.
+     * using the Decrypt method below.
      *
      * @param body a map which contains the String "value" and the input number
      * @return a JSON object of type EncryptedStatistics which contains the encryptedAvg and encryptedStdDev
@@ -87,7 +86,7 @@ public class CryptoController {
     }
 
     /**
-     * API for getting the running numeric aggregate values.
+     * API for consuming the running numeric aggregate values by decrypting the previously encrypted values.
      *
      * @param body a map which contains the String "cipher" and encrypted(avg) or encrypted(stdDev)
      * @return a response entity with the String of the actual average or actual standard deviation in the body

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class MathTest {
+    //testing the math power function to make sure it behaves expectedly on positive numbers
     @Test
     public void powerFuncTest() {
         int num = 4;
@@ -12,6 +13,7 @@ public class MathTest {
         Assertions.assertEquals(16, Math.pow(num, power));
     }
 
+    //testing the math power function to make sure it behaves expectedly on negative numbers
     @Test
     public void negativePowerFuncTest() {
         int num = -4;
